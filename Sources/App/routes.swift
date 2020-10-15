@@ -9,5 +9,6 @@ func routes(_ app: Application) throws {
     app.get("hello") { req -> String in
         return "Hello, world!"
     }
+    //adding to todo controller
     try app.register(collection: TodoController())
 }
