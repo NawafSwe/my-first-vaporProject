@@ -10,7 +10,8 @@ import Vapor
 //creating the user model and make it confirm to the protocols Model , Content
 final class User : Model,Content{
     static let schema: String = "users"
-    var id : UUID?
+    @ID(key: .id)
+     var id : UUID?
     
     @Field(key: "username")
     var username : String
@@ -18,6 +19,7 @@ final class User : Model,Content{
     var password : String
     @Field(key: "email")
     var email: String
+
     init(){}
     
     //initing the user constructor

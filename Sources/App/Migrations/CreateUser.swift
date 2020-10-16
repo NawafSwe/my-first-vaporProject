@@ -15,6 +15,7 @@ struct CreateUser : Migration{
             .field("username", .string, .required)
             .field("password", .string, .required)
             .field("email", .string , .required)
+            //setting constrains where username and email must be unique in the db 
             .unique(on: "email", "username")
             .create()
     }

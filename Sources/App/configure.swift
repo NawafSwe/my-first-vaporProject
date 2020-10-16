@@ -12,7 +12,7 @@ public func configure(_ app: Application) throws {
     ), as: .mongo)
 
     app.migrations.add(CreateTodo())
-
+    app.migrations.add(CreateUser())
     // register routes
     try routes(app)
 }
