@@ -13,19 +13,21 @@ struct UserController : RouteCollection{
         //specifying the routes and their functions
         users.get(use: index)
         users.post(use: create)
-        users.group(":id"){ user in
-            user.delete(use:delete)
+        users.group(":userId"){ user in
             user.put(use:update)
-            
+            user.delete(use:delete)
+            user.get(use:getUserByID)
         }
     }
     //index for getting all users  --> /users
     func index(req : Request) throws -> EventLoopFuture<[User]>{
+        print("users was found from index")
         return User.query(on: req.db).all()
     }
     
     //creating the user
     func create(req: Request)throws -> EventLoopFuture<User>{
+       
         //decoding the data from json object to UserModel
         let user = try req.content.decode(User.self)
         //saving the user model into the database and returns its info
@@ -36,7 +38,7 @@ struct UserController : RouteCollection{
     
     //delete user
     func delete(req : Request) throws -> EventLoopFuture<HTTPStatus>{
-        return User.find(req.parameters.get("id"), on: req.db)
+        return User.find(req.parameters.get("userId"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap({$0.delete(on: req.db)})
             .transform(to: .ok)
@@ -44,13 +46,18 @@ struct UserController : RouteCollection{
     
     //update user info
     func update(req: Request) throws -> EventLoopFuture<HTTPStatus>{
-        return User.find(req.parameters.get("id"), on: req.db)
+       return User.find(req.parameters.get("userId"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap({$0.update(on: req.db)})
             .transform(to: .ok)
+        
     }
     
-   
+    func getUserByID(req : Request)throws -> EventLoopFuture<User> {
+        print("user was found from get user by id")
+       return User.find(req.parameters.get("userId"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+        
+    }
 }
-
 
